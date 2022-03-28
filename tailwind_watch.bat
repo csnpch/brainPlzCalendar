@@ -1,0 +1,1 @@
+call npx tailwindcss -i ./src/assets/css/input_tailwind.css -o ./src/assets/css/tailwind.css --watch

@@ -1,0 +1,11 @@
+/* @tailwind base; */
+
+
+@tailwind components;
+/* .select2-dropdown {
+    @apply rounded-b-lg shadow-md;
+} */
+
+
+@tailwind utilities;
+

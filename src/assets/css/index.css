@@ -1,0 +1,56 @@
+@import './reset.css';
+@import './tailwind.css';
+@import './ripple.css';
+
+/* Google font */
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600&display=swap');
+
+.font_prompt {
+    font-family: 'Prompt', sans-serif;
+}
+
+.font_baloo {
+    font-family: 'Baloo Bhaijaan 2', cursive;
+}
+
+.font_itim {
+    font-family: 'Itim', sans-serif;
+}
+
+
+@keyframes showSmooth {
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.smoothShow {
+    opacity: 0;
+    animation: showSmooth 0.5s ease-in-out forwards ;
+}
+
+
+.icon_color {
+    color: #C4B5FD !important;
+}
+
+/* .custom .p-scrollpanel-wrapper {
+    border-right: 9px solid #f4f4f4;
+} */
+
+.custom .p-scrollpanel-bar {
+    background-color: #444444;
+}
+
+.custom .p-scrollpanel-bar:hover {
+    background-color: #222;
+    transition: 0.3s;
+}
+
+
+@media screen and (max-width: 768px) {
+    .custom .p-scrollpanel-bar {
+        width: 4px !important;       
+    }
+}
