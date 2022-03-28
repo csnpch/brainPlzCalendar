@@ -133,12 +133,25 @@ const unregisterSharing = async (userId = null, public_key = null) => {
 }
 
 
+const checkJoinSharingUser = async (userId = null, public_key = null) => {
+    const dataUser = await getUserById(userId);
+
+    if (dataUser) {
+        for (let val of dataUser.joinShares) {
+            if (val === public_key) { return false; }
+        }
+        return true;
+    }
+    return false;
+}
+
 module.exports = {
     createUser,
     checkUserLogin,
     getUsers,
     getUserById,
     getNameUserById,
+    checkJoinSharingUser,
     updateUserById,
     deleteUserById,
     updateJoinSharing,

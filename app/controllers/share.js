@@ -1,9 +1,12 @@
 const shareModel = require('./../models/share');
-const { getNameUserById, updateJoinSharing, unregisterSharing } = require('./../controllers/user');
+const { getNameUserById, checkJoinSharingUser, updateJoinSharing, unregisterSharing } = require('./../controllers/user');
 // const config = require('./../configs/');
 
 const randomTextInvite = async (textLength) => {
-    const chars = '0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const chars = '0123456789'+'abcdefghij'
+        +'0123456789'+'klmnopqrst'+'0123456789'
+        +'uvwxyzABCD'+'0123456789'+'EFGHIJKLMN'
+        +'0123456789'+'OPQRSTUVWX'+'YZ0123456789';
     let code = '';
     for (let i = 0; i < textLength; i++) {
         code += chars[Math.floor(Math.random() * chars.length)];
@@ -168,7 +171,7 @@ const checkCodeJoin = async (code = null) => {
 
 
 const joinSharing = async (userId = null, public_key = null) => {
-    const join = await updateJoinSharing(userId, public_key);
+
     const pushUserToAttending = async (userId, public_key) => {
         const find = await shareModel.findOne({'sharings.public_key': public_key});
         if (find) {
@@ -183,8 +186,15 @@ const joinSharing = async (userId = null, public_key = null) => {
             }
         }
     };
-    await pushUserToAttending(userId, public_key);
-    return join;
+    
+    const checkJoin = await checkJoinSharingUser(userId, public_key);
+    if (checkJoin) {
+        const join = await updateJoinSharing(userId, public_key);
+        await pushUserToAttending(userId, public_key);
+        return join;
+    }
+    
+    return null;
 }
 
 

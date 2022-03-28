@@ -19,10 +19,14 @@ router.get('/find/invite/:code', async (req, res) => {
 router.post('/join/:public_key/:creator', async (req, res) => {
     try {
         if (req.params.creator !== req.session.userLogin._id) {
-            const share = await controller.joinSharing(req.session.userLogin._id, req.params.public_key);
-            res.status(200).json({ statusJoin: true });
+            const join = await controller.joinSharing(req.session.userLogin._id, req.params.public_key);
+            if (join) {
+                res.status(200).json({ statusJoin: true });
+            } else {
+                res.status(200).json({ statusJoin: false, msg: 'You are already attending' });
+            }
         } else {
-            res.status(200).json({ statusJoin: false, msg: 'You can not join your own share' });
+            res.status(200).json({ statusJoin: false, msg: 'Cannot join your own attending' });
         }
     } catch(err) { res.error(err) }
 });
