@@ -20,7 +20,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in dataActivitys" :key="index" class="border-b border-white border-opacity-50"> 
+                        <tr v-for="(item, index) in dataActivitys" :key="index"
+                            class="border-b border-white border-opacity-50"
+                        > 
                             <td class="py-4 px-6 font-semibold">{{ index + 1 }}</td>
                             <td class="py-4 px-6 font-semibold">{{ item.name }}</td>
                             <td class="py-4 px-6">
@@ -54,7 +56,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <Pagination v-if="true" />
+                <Pagination 
+                    v-if="getLength(dataActivitys) > 0" 
+                    :totalPage="totalPage" 
+                    :totalItem="getLength(dataActivitys)"
+                    @onPage="onPage($event)" 
+                />
             </div>
             
             <div class="w-full flex justify-center">
@@ -98,6 +105,11 @@
                 keyWordSearch: false,
                 dataActivitys: [],
                 inputSearch: '',
+                totalPage: 1,
+                rangeItemsShow: {
+                    start: 1,
+                    end: 10,
+                }
             }
         },
         watch: {
@@ -109,8 +121,13 @@
                 return Object.keys(obj).length;
             },
 
+            async countPage() {
+                this.totalPage = Math.ceil(this.getLength(this.dataActivitys) / 10);
+            },
+
             async getActivitys() {
                 this.dataActivitys = await store.methods.getDataActivity();
+                await this.countPage()
             },
 
             getText(where, data) {
@@ -193,7 +210,12 @@
             
             checkDeviceClient() {
                 return window.innerWidth < 768;
+            },
+
+            onPage(page) {
+                console.log('Main.vue - onPage = ', page)
             }
+
         },
         async mounted() {
             document.title = 'Activity | BrainPlz';
