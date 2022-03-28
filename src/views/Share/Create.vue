@@ -28,7 +28,7 @@
                     >
                 </div>
                 <div class="grid grid-rows-2 md:grid-cols-2 gap-2.5">
-                    <router-link to="/share">
+                    <router-link to="/share" class="md:row-start-1 row-start-2">
                         <button 
                             class="
                                 font_baloo font-semibold tracking-wider bg-[#313964] hover:bg-[#2a3158] 
