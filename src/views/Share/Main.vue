@@ -39,7 +39,7 @@
                             type="text" 
                             placeholder="www.brain_plz.com/share/########"
                             class="w-full py-3.5 px-5 rounded-lg bg-[#474747] focus:outline-sky-400"
-                            @keyup="validateInput()"
+                            @keypress.enter="checkCodeInvite"
                         >
                     </div>
                     <div class="-mt-1 md:-mt-3 grid grid-cols-2 h-10 gap-3 font_itim text-white">
@@ -160,10 +160,9 @@
                                 await store.methods.getDataUserOnDb();
                                 await store.methods.getDataSharing();
                             } else {
-                                console.log('Not working');
                                 this.$toast.add({
                                     severity:'warn', 
-                                    summary: 'Cannot join your own attending.', 
+                                    summary: res.data.msg+'.', 
                                     detail:'', 
                                     life: 2000
                                 });
