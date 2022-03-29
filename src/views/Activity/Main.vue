@@ -4,7 +4,15 @@
             <div class="w-full font_baloo flex flex-col overflow-x-scroll bg-[#2D2D2D] p-4 pb-6 rounded-3xl md:flex justify-center mx-auto">
                 <div class="flex flex-col md:flex-row justify-between p-2 gap-4">
                     <p class="text-2xl font-bold text-white ml-2">Your activitys</p>
-                    <input @mouseenter="keyWordSearch = true" @mouseleave="keyWordSearch = false" @keypress="onSearch()" v-model="inputSearch" type="text" placeholder="Typing to search someting" class="text-sm font_prompt w-72 px-4 py-2 bg-transparent border-2 rounded-lg border-white border-opacity-20" />
+                    <input 
+                        type="text" 
+                        v-model="inputSearch" 
+                        @mouseenter="keyWordSearch = true" 
+                        @mouseleave="keyWordSearch = false" 
+                        @keypress="onSearch()"
+                        placeholder="Typing to search someting" 
+                        class="text-sm font_prompt w-64 md:w-72 px-4 py-2 bg-transparent border-2 rounded-lg border-white border-opacity-20" 
+                    />
                 </div>
                 <table v-if="dataActivitys" class="w-full h-full">
                     <thead>
@@ -20,10 +28,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in dataActivitys" :key="index"
+                        <tr 
+                            v-for="(item, index) in selectToShowActivitys" :key="index"
                             class="border-b border-white border-opacity-50"
                         > 
-                            <td class="py-4 px-6 font-semibold">{{ index + 1 }}</td>
+                            <td class="py-4 px-6 font-semibold">{{ rangeItemsShow.start + index }}</td>
                             <td class="py-4 px-6 font-semibold">{{ item.name }}</td>
                             <td class="py-4 px-6">
                                 {{ getText('when', item.when) }}
@@ -60,6 +69,7 @@
                     v-if="getLength(dataActivitys) > 0" 
                     :totalPage="totalPage" 
                     :totalItem="getLength(dataActivitys)"
+                    :rangeItemsShow="rangeItemsShow"
                     @onPage="onPage($event)" 
                 />
             </div>
@@ -80,7 +90,7 @@
 
 
 <script>
-    // TODO : Search, page, edit
+    // TODO : edit activity
 
     import { provide } from 'vue';
     import store from '@/store';
@@ -104,8 +114,10 @@
             return {
                 keyWordSearch: false,
                 dataActivitys: [],
+                selectToShowActivitys: [],
                 inputSearch: '',
                 totalPage: 1,
+                unitItems_Show: 10,
                 rangeItemsShow: {
                     start: 1,
                     end: 10,
@@ -122,12 +134,15 @@
             },
 
             async countPage() {
-                this.totalPage = Math.ceil(this.getLength(this.dataActivitys) / 10);
+                this.totalPage = Math.ceil(this.getLength(this.dataActivitys) / this.unitItems_Show);
             },
 
             async getActivitys() {
                 this.dataActivitys = await store.methods.getDataActivity();
-                await this.countPage()
+                for (let i = 0; i < this.dataActivitys.length; i++) {
+                    this.dataActivitys[i].show = false;
+                }
+                await this.onPage(1);
             },
 
             getText(where, data) {
@@ -164,7 +179,7 @@
                         .then(res => {
                             this.dataActivitys = res.data;
                         })
-                        .catch(err => { 
+                        .catch(err => {
                             this.$toast.add({
                                 severity:'warn', 
                                 summary: 'System search have a problem', 
@@ -212,8 +227,18 @@
                 return window.innerWidth < 768;
             },
 
-            onPage(page) {
-                console.log('Main.vue - onPage = ', page)
+            async onPage(page) {
+                this.unitItems_Show = this.checkDeviceClient() ? 5 : 10;
+                this.rangeItemsShow.start = (page - 1) * this.unitItems_Show + 1;
+                this.rangeItemsShow.end = page * this.unitItems_Show;
+                
+                this.selectToShowActivitys = [];
+                for (let i = this.rangeItemsShow.start - 1; i < this.rangeItemsShow.end; i++) {
+                    if (this.dataActivitys[i]) {
+                        this.selectToShowActivitys.push(this.dataActivitys[i]);
+                    }
+                }
+                await this.countPage();
             }
 
         },
