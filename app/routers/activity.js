@@ -2,13 +2,14 @@ const router = require('express').Router();
 const { check } = require('express-validator');
 const controller = require('../controllers/activity');
 
+
 router.get('/', async (req, res) => {
     try {
         const activitys = await controller.getActivitys(req.session.userLogin._id);
-        // console.log('typeof is ', typeof activitys);
         res.status(200).json(activitys);
     } catch(err) { res.error(err) }
 });
+
 
 router.post('/create', [
     check('form').not().isEmpty().withMessage('Data is required'),
@@ -22,6 +23,7 @@ router.post('/create', [
     } catch(err) { res.error(err); }
 });
 
+
 router.get('/findOne/:id', async (req, res) => {
     try {
         const activity = await controller.getActivityById(req.params.id);
@@ -29,12 +31,14 @@ router.get('/findOne/:id', async (req, res) => {
     } catch(err) { res.error(err); }
 });
 
+
 router.put('/update/:id', async (req, res) => {
     try {
         const result = await controller.updateActivity(req.params.id, req.body);
         res.status(200).json({data: result});
     } catch(err) { res.error(err); }
 });
+
 
 router.post('/delete', [
     check('activity_id').not().isEmpty().withMessage('Activity ID is required'),
@@ -60,6 +64,7 @@ router.get('/countMembers/:id', [
 
     } catch (err) { res.error(err) }
 });
+
 
 router.post('/search', [
     check('keyword').not().isEmpty().withMessage('Keyword is required'),

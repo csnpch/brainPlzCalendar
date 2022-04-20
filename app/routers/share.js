@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { check } = require('express-validator');
 const controller = require('../controllers/share');
 
+
 router.get('/creator/:id', async (req, res) => {
     try {
         let shares = await controller.findShareByCreator(req.params.id, req.session.userLogin.joinShares);
@@ -10,12 +11,14 @@ router.get('/creator/:id', async (req, res) => {
     } catch(err) { res.error(err) }
 });
 
+
 router.get('/:id', async (req, res) => {
     try {
         const share = await controller.getShareById(req.params.id);
         res.status(200).json(share);
     } catch(err) { res.error(err) }
 });
+
 
 router.get('/find/invite/:code', async (req, res) => {
     try {
@@ -48,6 +51,7 @@ router.post('/join/:public_key/:creator', async (req, res) => {
     } catch(err) { res.error(err) }
 });
 
+
 router.post('/create', [
     check('name').not().isEmpty().withMessage('Name is required'),
 ], async (req, res) => {
@@ -61,6 +65,7 @@ router.post('/create', [
     } catch(err) { res.error(err) }
 });
 
+
 router.delete('/public_key=:value', async (req, res) => {
     try {
         const share = await controller.deleteShare(req.session.userLogin._id, req.params.value);  
@@ -68,11 +73,13 @@ router.delete('/public_key=:value', async (req, res) => {
     } catch(err) { res.error(err) }
 });
 
+
 router.post('/unregister', async (req, res) => {
     try {
         const share = await controller.unjoinSharing(req.session.userLogin._id, req.body.public_key);
         res.status(200).json({ statusJoin: true, share });
     } catch(err) { res.error(err) }
 });
+
 
 module.exports = router;

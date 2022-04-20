@@ -3,6 +3,7 @@ const { check } = require('express-validator');
 const controller = require('./../controllers/user');
 const auth = require('../middleware/auth');
 
+
 router.get('/self', auth, async (req, res) => {
     try {
         let tmpToken = req.session.userLogin.token;
@@ -48,7 +49,6 @@ router.post('/login', [
 
         const { body } = req;
         const user = await controller.checkUserLogin(body);
-        console.log(user);
         req.session.userLogin = user;
 
         res.status(200).json(user);

@@ -233,9 +233,6 @@ const findActivitysOnShares = async (userId, dataJoin, dataShare) => {
         });
     }
     
-    // dataShare.sharing = activitys;
-    // console.log('\n\nactivitys:::\n', dataShare, '\n\n');
-    // dataShare
     return dataShare;
 };
 

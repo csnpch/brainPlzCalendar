@@ -38,7 +38,6 @@ const searchActivitys = async (keyword = null, userId = null) => {
             { creator: userId }
         ]
     }).sort({ createdAt: -1 });
-    console.log('On search activitys: ', activitys);
     
     return activitys;
 };
