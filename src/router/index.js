@@ -53,7 +53,7 @@ router.beforeEach((to, from, next) => {
             store.methods.setDataUser(res.data);
             return next();
         } else { 
-            router.push('/auth');
+            router.push({name:'Auth'});
         }
     });
 });

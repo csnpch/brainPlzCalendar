@@ -100,9 +100,6 @@
             onPage: function(val) {
                 this.$emit('onPage', val);
             }
-        },
-        mounted() {
-            console.log(this.data);
-        },
+        }
     }
 </script>

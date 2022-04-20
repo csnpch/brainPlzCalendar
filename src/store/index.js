@@ -4,25 +4,17 @@ import axios from 'axios';
 var pass = () => {};
 
 const state = reactive({
-    counter: 0,
-    sidebarToggleStatus: false,
     dataUser: null,
     dataSharing: {
-        status: false,
-        myself: null,
-        another: null
+        status: false
     },
     dataActivity: null
 });
 
 const methods = {
     
-    getSidebarStatus() { return state.sidebarToggleStatus; },
-    toggleSidebar() { state.sidebarToggleStatus = !state.sidebarToggleStatus; },
-    
     async getDataUserOnDb() { 
         await axios.get('/api/user/self').then(res => {
-            console.log('getDataUserOnDb', res.data);
             this.setDataUser(res.data);    
         }).catch(err => {
             console.log(err);
@@ -41,12 +33,16 @@ const methods = {
     },
     setDataSharing(data) { state.dataSharing = data; },
 
-    async getDataActivity() { 
-        if (state.dataActivity) return state.dataActivity;
+    async getDataActivity(status) { 
+        if (!status) if (state.dataActivity) return state.dataActivity;
         await axios.get('/api/activity/').then(res => {
             this.setDataActivity(res.data);
         }).catch(err => { console.log(err) });
         return state.dataActivity;
+    },
+    async findDataActivity(id) {
+        if (!state.dataActivity) return null;
+        return state.dataActivity.find(data => data._id == id);
     },
     setDataActivity(data) { state.dataActivity = data; },
     pushDataActivity(data) { try { state.dataActivity.unshift(data); } catch(err) { pass() } },
@@ -54,14 +50,14 @@ const methods = {
 
 }
 
-const getters = {
-    counterSquared() {
-        return state.counter * state.counter;
-    }
-}
+// const getters = {
+//     counterSquared() {
+//         return state.counter * state.counter;
+//     }
+// }
 
 export default {
     state,
     methods,
-    getters
+    // getters
 }

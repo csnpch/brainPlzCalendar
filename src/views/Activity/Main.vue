@@ -40,8 +40,13 @@
                             <td class="py-4 px-6 font-semibold first-letter:uppercase">
                                 {{ item.type }}
                             </td>
-                            <td class="py-4 px-6 font-semibold">
-                                {{ getText('access', item.access_rights) }}
+                            <td 
+                                @click="openListSharingName(item)"
+                                class="py-4 px-6 font-semibold"
+                            >
+                                <span class="cursor-pointer hover:text-sky-200">
+                                    {{ getText('access', item.access_rights) }}
+                                </span>
                             </td>
                             <!-- <td class="py-4 px-6 font-semibold first-letter:uppercase">
                                 {{ item.everyOption || '-' }}
@@ -51,9 +56,6 @@
                             </td>
                             <td class="py-4 px-6 font-semibold">
                                 <div class="flex justify-center gap-3">
-                                    <button @click="onEdit(item)" class="text-yellow-300 hover:text-yellow-500">
-                                        <i class="far fa-edit"></i>
-                                    </button>
                                     <button @click="onDelete($event, item)" class="text-red-400 hover:text-red-500">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
@@ -84,6 +86,13 @@
 
         <ConfirmPopup />
         <Toast position="top-right" class="Toast" />
+        <Dialog header="List sharing" class="w-96" v-model:visible="display" :modal="true">
+            <div class="text-center">
+                <ul v-for="(item, index) of listNameSharings" :key="index">
+                    <li class="mt-10 text-xl mb-4 text-yellow-400 first-letter:uppercase">{{ item }}</li>
+                </ul>
+            </div>
+        </Dialog>
 
     </Layout>
 </template>
@@ -100,12 +109,14 @@
     import Pagination from '@/components/Pagination';
     import ConfirmPopup from 'primevue/confirmpopup';
     import Toast from 'primevue/toast';
-
+    import Dialog from 'primevue/dialog';
+    
     export default {
         name: 'AddActivity',
         components: {
             Layout, Pagination,
-            ConfirmPopup, Toast
+            ConfirmPopup, Toast,
+            Dialog
         },
         setup() {
             provide('store', store);
@@ -121,7 +132,9 @@
                 rangeItemsShow: {
                     start: 1,
                     end: 10,
-                }
+                },
+                display: false,
+                listNameSharings: [],
             }
         },
         watch: {
@@ -129,6 +142,20 @@
         },
         methods: {
 
+            async openListSharingName(val) {
+                this.listNameSharings = [];
+                for (let key of val.access_rights.public_key) {
+                    await axios.get(`/api/share/find/public_key/${key}`)
+                        .then(res => {
+                            this.listNameSharings.push(res.data.name);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                }
+                this.display = true;
+            },
+            
             getLength(obj) {
                 return Object.keys(obj).length;
             },
@@ -139,8 +166,13 @@
 
             async getActivitys() {
                 this.dataActivitys = await store.methods.getDataActivity();
+                let userId = await store.methods.getDataUser()._id;
                 for (let i = 0; i < this.dataActivitys.length; i++) {
-                    this.dataActivitys[i].show = false;
+                    if (this.dataActivitys[i].creator !== userId) {
+                        this.dataActivitys.splice(i--, 1);
+                    } else {
+                        this.dataActivitys[i].show = false;
+                    }
                 }
                 await this.onPage(1);
             },
@@ -188,10 +220,11 @@
                             });
                         });
                 }
+                this.onPage(1);
             },
 
-            onEdit(item) {
-                alert(JSON.stringify(item));
+            onEdit(val) {
+                this.$router.push({name: 'EditActivity', params: { id: val._id }});
             },
 
             onDelete(event, item) {

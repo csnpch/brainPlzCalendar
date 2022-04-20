@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest=./../Backend/www/app",
+    "build": "vue-cli-service build --dest=./../Backend/app/www",
     "lint": "vue-cli-service lint",
     "tailwind": "npx tailwindcss -i ./src/assets/css/input_tailwind.css -o ./src/assets/css/tailwind.css --watch"
   },

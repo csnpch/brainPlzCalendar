@@ -130,7 +130,8 @@
                     }).finally(() => {
                         this.setDataToShow();
                     });
-            
+                await store.methods.getDataSharing();
+                
             }
         },
         async mounted() {

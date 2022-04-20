@@ -25,16 +25,24 @@
     100% { opacity: 1; }
 }
 
+@keyframes showSmooth2 {
+    70% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 .smoothShow {
     opacity: 0;
     animation: showSmooth 0.5s ease-in-out forwards ;
 }
 
+.smoothShow2 {
+    opacity: 0;
+    animation: showSmooth2 0.8s ease-in-out forwards ;
+}
 
 .icon_color {
     color: #C4B5FD !important;
 }
-
 /* .custom .p-scrollpanel-wrapper {
     border-right: 9px solid #f4f4f4;
 } */

@@ -12,7 +12,7 @@
                 ></i>
             </button>
             <p class="relative font_baloo w-full text-center font-medium text-xl">
-                Detail activity of&nbsp;&nbsp;“&nbsp;&nbsp;{{ itemActivity.name }}&nbsp;&nbsp;”
+                “&nbsp;&nbsp;<span class="text-purple-200">{{ itemActivity.name }}</span>&nbsp;&nbsp;”
             </p>
             <div class="mt-8 flex flex-col gap-4">
                 <div class="font_itim gap-2 grid grid-cols-[3fr_4fr]">
@@ -36,19 +36,50 @@
                     <span class="text-[#F3D014]">{{ itemActivity.nameCreator }}</span>
                 </div>
             </div>
+            <div 
+                v-if="itemActivity.notJoinEvent" 
+                @click="onJoinEvent(itemActivity)"
+                class="text-center mt-8 -mb-8 w-full bg-purple-800 rounded-lg py-2 pt-2.5 text-sm tracking-wide
+                font_baloo text-white hover:bg-purple-900 cursor-pointer duration-200 font-semibold"
+            >
+                JOIN EVENT
+            </div>
+            <div
+                v-if="itemActivity.onJoinEvnet"
+                @click="onUnJoin(itemActivity)"
+                class="text-center mt-8 -mb-8 w-full bg-orange-700 rounded-lg py-2 pt-2.5 text-sm tracking-wide
+                font_baloo text-white hover:bg-orange-800 cursor-pointer duration-200 font-semibold"
+            >
+                UNJOIN EVENT
+                <ConfirmPopup class="ml-28 md:ml-72 md:w-52"></ConfirmPopup>
+            </div>
         </div>
+
         <div @click="onClose()" class="z-0 overlay w-full h-full bg-black opacity-30"></div>
+
     </div>
+
 </template>
 
 <script>
+    import ConfirmPopup from 'primevue/confirmpopup';
+
     export default {
         name: 'cpn_PopupActivity',
+        components: {
+            ConfirmPopup
+        },
         props: {
             activity: {
                 type: Object,
                 default: () => {
                     return null;
+                }
+            },
+            acceptEvent: {
+                type: Array,
+                default: () => {
+                    return [];
                 }
             }
         },
@@ -119,10 +150,27 @@
                         return time_start + (time_stop.length > 0 ? ' - ' + time_stop : '');
                     }
                 }
-            }
+            },
+            onJoinEvent(val) {
+                this.$emit('onJoinEvent', val);
+            },
+            onUnJoin(val) {
+                this.$confirm.require({
+                    target: event.currentTarget,
+                    message: 'Are you sure?',
+                    icon: 'pi pi-exclamation-triangle',
+                    accept: () => {
+                        this.$emit('onUnJoin', val);
+                    },
+                    reject: () => { }
+                });
+            },
+            async setData() {
+                this.itemActivity = this.activity;
+            },
         },
-        mounted() {
-            this.itemActivity = this.activity;
+        async mounted() {
+            await this.setData();
         },
 
     }

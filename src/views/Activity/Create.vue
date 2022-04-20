@@ -328,19 +328,7 @@
                 ],
                 selectSharing: {
                     grouped: [
-                        // {
-                        //     label: 'You owner',
-                        //     items: [
-                        //         // {label: 'KMUTNB', value: 'asfk1o2rk12prkfop1'}
-                        //     ]
-                        // },
-                        // {
-                        //     label: 'Anoter',
-                        //     items: [
-                        //         // {label: 'FITM', value: 'oasfk1opfkop12fk12'},
-                        //         // {label: 'IT22', value: 'poh2kp4otk2p3o31as'}
-                        //     ]
-                        // }
+                        {label: 'Sharings', items: []}
                     ]
                 },
                 selectDay: [
@@ -366,35 +354,26 @@
             async setSelectAccessSharing() {
                 let accessSharings = await store.methods.getDataSharing();
                 
-                const customPushAccessSharing = (accessSharings) => {
-
-                    let statusCreateLabel = [true, true];
+                const customPushAccessSharing = async (accessSharings) => {
 
                     for (let item of accessSharings.sharings) {
                         if (!item.creator) {
-                            if (statusCreateLabel[0]) {
-                                statusCreateLabel[0] = false;
-                                this.selectSharing.grouped.push({
-                                    label: 'You owner',
-                                    items: []
-                                });
-                            }
                             this.selectSharing.grouped[0].items.push({
                                 label: item.name,
-                                value: item.id
+                                value: item.public_key
                             });
-                        } else {
-                            if (statusCreateLabel[1]) {
-                                statusCreateLabel[1] = false;
-                                this.selectSharing.grouped.push({
-                                    label: 'Anoter',
-                                    items: []
-                                });
-                            }
-                            this.selectSharing.grouped[1].items.push({
-                                label: item.name,
-                                value: item.id
-                            });
+                        } 
+                        // else {
+                        //     this.selectSharing.grouped[1].items.push({
+                        //         label: item.name,
+                        //         value: item.public_key
+                        //     });
+                        // }
+                    }
+
+                    for (let item of this.selectSharing.grouped) {
+                        if (item.items.length == 0) {
+                            this.selectSharing.grouped.splice(this.selectSharing.grouped.indexOf(item), 1);
                         }
                     }
 
@@ -456,6 +435,8 @@
                 //         }
                 //     }
                 // }
+
+                console.log('tmpType', tmpType);
 
                 for (let key of tmpAccess.key) {
                     if (this.form.access_rights[key]) {

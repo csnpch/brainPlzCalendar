@@ -1,25 +1,25 @@
 <template>
     <footer class="w-full bg-zinc-900">
-        <div class="grid grid-cols-3 items-center justify-items-center">
+        <div class="grid grid-cols-2 items-center justify-items-center mt-3">
             <router-link to='/' class="">
-                <Button class="p-button-text">
+                <button class="btn-color">
                     <i class="fas fa-home text-xl"
                         :class="{'icon_color': !checkPath('/')}"
                     ></i>
-                </Button>
+                </button>
             </router-link>
             <router-link to='/calendar' class="">
-                <Button class="relative p-button-text" style="height: 100% important">
+                <button class="btn-color" style="height: 100% important">
                     <i class="fas fa-calendar-alt text-xl"
                         :class="{'icon_color': !checkPath('/calendar')}"
                     ></i>
-                </Button>
+                </button>
             </router-link>
-            <div class="avatar">
-                <Button class="p-button-text">
-                    <img src="./../../assets/imgs/Avatar.jpg" class="overflow-hidden h-7 rounded-full">
+            <!-- <div class="avatar">
+                <Button class="p-button-text relative mt-0.5">
+                    <i class="fas fa-user-circle text-[1.6rem] icon_color"></i>
                 </Button>
-            </div>
+            </div> -->
             
         </div>
     </footer>
@@ -44,3 +44,10 @@
         },
     }
 </script>
+
+
+<style scoped>
+    .btn-color {
+        color: rgb(64, 172, 255);
+    }
+</style>
