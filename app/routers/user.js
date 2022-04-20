@@ -15,9 +15,11 @@ router.get('/self', auth, async (req, res) => {
     } catch { res.status(500).json({ msg: 'Something went wrong' }); }
 });
 
+
 router.get('/getNameUser/:id', auth, async (req, res) => {
     res.status(200).json(await controller.getNameUserById(req.params.id));
 });
+
 
 router.post('/register', [
     check('name').not().isEmpty(),
@@ -72,10 +74,20 @@ router.get('/getSession', async(req, res) => {
 });
 
 
-// router.get('/statusSharing', auth, async(req, res) => {
-//     try {
-        
-//     } catch(err) { res.error(err); }
-// });
+router.post('/joinEvent/:id', async(req, res) => {
+    try {
+        const result = await controller.joinEvent(req.session.userLogin._id, req.params.id);
+        res.status(200).json(result);
+    } catch(err) { res.error(err); }
+});
+
+
+router.post('/unJoinEvent/:id', async (req, res) => {
+    try {
+        const result = await controller.unJoinEvnet(req.session.userLogin._id, req.params.id);
+        res.status(200).json(result);
+    } catch(err) { res.error(err) }
+});
+
 
 module.exports = router;

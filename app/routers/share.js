@@ -4,8 +4,16 @@ const controller = require('../controllers/share');
 
 router.get('/creator/:id', async (req, res) => {
     try {
-        const shares = await controller.findShareByCreator(req.params.id, req.session.userLogin.joinShares);
+        let shares = await controller.findShareByCreator(req.params.id, req.session.userLogin.joinShares);
+        shares = await controller.findActivitysOnShares(req.session.userLogin._id, req.session.userLogin.joinShares, shares);
         res.status(200).json(shares);
+    } catch(err) { res.error(err) }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const share = await controller.getShareById(req.params.id);
+        res.status(200).json(share);
     } catch(err) { res.error(err) }
 });
 
@@ -15,6 +23,15 @@ router.get('/find/invite/:code', async (req, res) => {
         res.status(200).json(share);
     } catch(err) { res.error(err) }
 });
+
+
+router.get('/find/public_key/:key', async (req, res) => {
+    try {
+        const share = await controller.findInviteByPublicKey(req.params.key, req.session.userLogin._id);
+        res.status(200).json(share);
+    } catch(err) { res.error(err) }
+});
+
 
 router.post('/join/:public_key/:creator', async (req, res) => {
     try {

@@ -96,6 +96,7 @@ const updateUserById = async (userId, docs) => {
         // return ค่าที่ update แล้วออกไปข้างนอกจะได้นำไปใช้ต่อได้
         returnOriginal: false
     })
+
     return updatedUser;
 };
 
@@ -108,6 +109,7 @@ const deleteUserById = async (userId) => {
     return deleteUser;
 };
 
+
 const updateJoinSharing = async (userId = null, public_key = null) => {
     // const user = await getUserById(userId);
     const updateData = await userModel.updateOne({
@@ -119,6 +121,7 @@ const updateJoinSharing = async (userId = null, public_key = null) => {
     });
     return updateData;
 }
+
 
 const unregisterSharing = async (userId = null, public_key = null) => {
     const updateData = await userModel.updateOne({
@@ -145,6 +148,39 @@ const checkJoinSharingUser = async (userId = null, public_key = null) => {
     return false;
 }
 
+
+const countMembersInActivity = async (activityId = null) => {
+    const count = await userModel.find({
+        'acceptEvent': activityId
+    }).count();
+    return count;
+};
+
+
+const joinEvent = async (userId = null, activityId = null) => {
+    const acceptEvent = await userModel.findOneAndUpdate({
+        _id: userId
+    }, 
+    {$push: { acceptEvent: activityId }},
+    {
+        returnOriginal: false
+    });
+    return acceptEvent;
+};
+
+
+const unJoinEvnet = async (userId = null, activityId = null) => {
+    const acceptEvent = await userModel.findOneAndUpdate({
+        _id: userId
+    },
+    {$pull: { acceptEvent: activityId }},
+    {
+        returnOriginal: false
+    });
+    return acceptEvent;
+};
+
+
 module.exports = {
     createUser,
     checkUserLogin,
@@ -155,5 +191,8 @@ module.exports = {
     updateUserById,
     deleteUserById,
     updateJoinSharing,
-    unregisterSharing
+    unregisterSharing,
+    countMembersInActivity,
+    joinEvent, 
+    unJoinEvnet
 }

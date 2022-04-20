@@ -1,5 +1,6 @@
 const shareModel = require('./../models/share');
 const { getNameUserById, checkJoinSharingUser, updateJoinSharing, unregisterSharing } = require('./../controllers/user');
+const { getActivitysByPublicKey } = require('./../controllers/activity');
 // const config = require('./../configs/');
 
 const randomTextInvite = async (textLength) => {
@@ -216,12 +217,36 @@ const unjoinSharing = async (userId = null, public_key = null) => {
 };
 
 
+const findActivitysOnShares = async (userId, dataJoin, dataShare) => {
+    
+    dataShare.sharings = dataShare.sharings.filter(item => item !== null);
+    
+    for (let public_key of dataJoin) {
+        await getActivitysByPublicKey(public_key).then(res => {
+            for (let item of res) {
+                if (item.creator !== userId) {
+                    for (let share of dataShare.sharings) {
+                        share.activitys.push(item);
+                    }
+                }
+            }
+        });
+    }
+    
+    // dataShare.sharing = activitys;
+    // console.log('\n\nactivitys:::\n', dataShare, '\n\n');
+    // dataShare
+    return dataShare;
+};
+
 module.exports = {
+    findInviteByPublicKey,
     findShareByCreator,
     findInviteByCode,
     checkCodeJoin,
     joinSharing,
     unjoinSharing,
     createShare,
-    deleteShare
+    deleteShare,
+    findActivitysOnShares
 }
