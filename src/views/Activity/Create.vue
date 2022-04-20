@@ -436,8 +436,6 @@
                 //     }
                 // }
 
-                console.log('tmpType', tmpType);
-
                 for (let key of tmpAccess.key) {
                     if (this.form.access_rights[key]) {
                         tmpAccess.val = key;
@@ -609,7 +607,6 @@
                         this.validate.time.msg = '';
                         this.validate.time.status = !true;
                     }
-                    // console.log('status ', this.statusFullTime);
                 }
 
                 let statusCheck = true; 

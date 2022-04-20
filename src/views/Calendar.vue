@@ -258,7 +258,7 @@
 
                 for (let val of this.dataActivitys) {
                     tmpDate = ['', ''];
-                    console.log(val.name)
+                    
                     try {
                         tmpDate[0] = new Date(val.when.date[0]);
                         tmpDate[0] = `${tmpDate[0].getFullYear()}-${addZeroFront(tmpDate[0].getMonth() + 1)}-${addZeroFront(tmpDate[0].getDate())}`; 

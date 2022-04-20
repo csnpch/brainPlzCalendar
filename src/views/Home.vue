@@ -325,7 +325,7 @@
             },
 
             async onPopupActivity(item, how) {
-                console.log(this.popupActivity)
+                
                 if (how === 'event') {
                     let event = null;
                     await axios.get(`/api/activity/findOne/${item.id}`)
@@ -412,7 +412,6 @@
             
             async getSharingData() {
                 this.dataSharing = await store.methods.getDataSharing();
-                console.log('getSharingData', this.dataSharing);
             },
             
             async getActivitys() {
@@ -481,7 +480,6 @@
 
                 for (let item of this.dataEvents) {
                     for (let activity of this.dataActivitys) {
-                        console.log(await checkEventJoin(activity._id))
                         if (item._id === activity._id && await checkEventJoin(activity._id)) {
                             this.dataActivitys.splice(this.dataActivitys.indexOf(activity), 1);
                         }
@@ -498,12 +496,15 @@
 
                     let tmpDataEvents = [];
                     for (let item of this.dataEvents) {
+                        
                         let date = null;
+                        
                         if (item.when.day) {
                             date = item.day
                         } else {
                             date = await convertDate(item.when.date[0]);
                         }
+                        
                         let unitMembers = await axios.get(`/api/activity/countMembers/${item._id}`)
                             .then(res => {
                                 if (res.status === 200) {
@@ -511,7 +512,7 @@
                                 }
                             })
                             .catch(err => { return err; });
-                        console.log('dateNow', dateNow);
+                        
                         let dateOnEvent = new Date(item.when.date[0]);
 
                         let tmpDayToCheck = [dateOnEvent.getDate(), dateNow.getDate()];
