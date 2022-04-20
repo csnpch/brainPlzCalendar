@@ -6,7 +6,7 @@ const server = {
 }
 
 const database = {
-    uri: process.env.MONGODB_URI || "mongodb://localhost:27017/App",
+    uri: process.env.MONGODB_URI || "mongodb://localhost:27017/BrainPlz",
 }
 
 const authentication = {
