@@ -1,6 +1,6 @@
 # 👉 Select a branch for see Frontend or Backend source code. 👈
 
-# Calendar alert website
+## Calendar alert website
 **This project is part of a "Javascript Programming" course
 
 ## Tools
